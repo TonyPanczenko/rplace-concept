@@ -1,14 +1,14 @@
-import styles from 'styles/App.module.scss';
+import styles from 'styles/app.module.scss';
 
 function App() {
   return (
-    <div className={styles.App}>
-      <header className={styles.App__header}>
+    <div className={styles.app}>
+      <header className={styles.app__header}>
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
-          className={styles.App__link}
+          className={styles.app__link}
           href="https://reactjs.org"
           target="_blank"
           rel="noopener noreferrer"
