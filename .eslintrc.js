@@ -37,6 +37,7 @@ module.exports = {
       'always'
     ]
   },
+  'ignorePatterns': ['dist/*'],
   'settings': {
     'react': {
       'createClass': 'createReactClass', // Regex for Component Factory to use,
@@ -59,15 +60,5 @@ module.exports = {
       { 'property': 'observer', 'object': 'Mobx' },
       { 'property': 'observer', 'object': '<pragma>' } // sets `object` to whatever value `settings.react.pragma` is set to
     ],
-    // 'formComponents': [
-    //   // Components used as alternatives to <form> for forms, eg. <Form endpoint={ url } />
-    //   'CustomForm',
-    //   { 'name': 'Form', 'formAttribute': 'endpoint' }
-    // ],
-    // 'linkComponents': [
-    //   // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
-    //   'Hyperlink',
-    //   { 'name': 'Link', 'linkAttribute': 'to' }
-    // ]
   }
 };
