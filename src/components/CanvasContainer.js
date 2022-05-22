@@ -25,10 +25,11 @@ function CanvasContainer() {
   };
 
   const getImage = async () => {
+    // This is my backend currently provisioned on AWS using CDK
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/get-image`);
     res.data.pixels.forEach(({ Coordinates, Color }) => {
-      ctxRef.fillStyle = Color;
-      ctxRef.fillRect(
+      ctxRef.current.fillStyle = Color;
+      ctxRef.current.fillRect(
         Coordinates.x * canvasPxPerImagePx,
         Coordinates.y * canvasPxPerImagePx,
         canvasPxPerImagePx,
