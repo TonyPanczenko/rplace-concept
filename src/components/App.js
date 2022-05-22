@@ -1,5 +1,5 @@
 import styles from 'styles/app.module.scss';
-import CanvasContainer from 'CanvasContainer';
+import CanvasContainer from './CanvasContainer';
 
 function App() {
   return (

@@ -25,7 +25,7 @@ function CanvasContainer() {
   };
 
   const getImage = async () => {
-    const res = await axios.get(`${process.env.API_URL}/get-image`);
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/get-image`);
     res.data.pixels.forEach(({ Coordinates, Color }) => {
       ctxRef.fillStyle = Color;
       ctxRef.fillRect(
@@ -37,14 +37,14 @@ function CanvasContainer() {
     });
   };
 
-  const selectPixel = ({ offsetX, offsetY }) => {
+  // const selectPixel = ({ offsetX, offsetY }) => {
     
-  };
+  // };
 
   return (
     <canvas
       style={{ width: '100%', height: '100%' }}
-      onMouseDown={selectPixel}
+      // onMouseDown={selectPixel}
       ref={canvasRef}
     ></canvas>
   );
