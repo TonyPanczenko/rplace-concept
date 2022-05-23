@@ -1,7 +1,11 @@
-import axios from 'axios';
 import { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
-function CanvasContainer() {
+import { setPixels } from '../store/canvas';
+import styles from '../styles/main-canvas.module.scss';
+
+function MainCanvas() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const imageResX = 100;
@@ -9,6 +13,7 @@ function CanvasContainer() {
   const imagePxSize = 10;
   const canvasPxDensity = 2;
   const canvasPxPerImagePx = imagePxSize * canvasPxDensity;
+  const dispatch = useDispatch();
 
   useEffect(() => {
     initCanvas();
@@ -26,8 +31,8 @@ function CanvasContainer() {
 
   const getImage = async () => {
     // This is my backend currently provisioned on AWS using CDK
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/get-image`);
-    res.data.pixels.forEach(({ Coordinates, Color }) => {
+    const { data: { pixels } } = await axios.get(`${process.env.REACT_APP_API_URL}/get-image`);
+    pixels.forEach(({ Coordinates, Color }) => {
       ctxRef.current.fillStyle = Color;
       ctxRef.current.fillRect(
         Coordinates.x * canvasPxPerImagePx,
@@ -36,19 +41,15 @@ function CanvasContainer() {
         canvasPxPerImagePx
       );
     });
+    dispatch(setPixels(pixels));
   };
-
-  // const selectPixel = ({ offsetX, offsetY }) => {
-    
-  // };
 
   return (
     <canvas
-      style={{ width: '100%', height: '100%' }}
-      // onMouseDown={selectPixel}
+      className={styles.canvas}
       ref={canvasRef}
     ></canvas>
   );
 }
 
-export default CanvasContainer;
+export default MainCanvas;

@@ -1,10 +1,12 @@
-import styles from 'styles/app.module.scss';
-import CanvasContainer from './CanvasContainer';
+import CameraCanvas from './CameraCanvas';
+import MainCanvas from './MainCanvas';
+import styles from '../styles/app.module.scss';
 
 function App() {
   return (
     <div className={styles.app}>
-      <CanvasContainer />
+      <MainCanvas />
+      <CameraCanvas />
     </div>
   );
 }

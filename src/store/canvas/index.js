@@ -17,11 +17,11 @@ const canvasSlice = createSlice({
       state.pixels.push(action.payload.pixel);
       state.timeUserPlacedPixel = action.payload.timestamp;
     },
-    selectPixel(state, action) {
+    setSelectedPixel(state, action) {
       state.selectedPixelId = action.payload;
     }
   }
 });
 
-export const { setPixels, addPixel, selectPixel } = canvasSlice.actions;
+export const { setPixels, addPixel, setSelectedPixel } = canvasSlice.actions;
 export default canvasSlice.reducer;

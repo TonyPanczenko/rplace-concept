@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import canvasReducer from './canvas/canvasReducer';
+import canvasReducer from './canvas';
 
 const reducer = {
   canvas: canvasReducer
