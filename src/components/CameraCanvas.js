@@ -13,6 +13,7 @@ function CameraCanvas() {
   const canvasPxDensity = 2;
   const canvasPxPerImagePx = imagePxSize * canvasPxDensity;
   const cameraLineWidth = 1;
+  // const cameraLineDashLength = [3, 4, 3];
   const cameraPrimaryColor = '#000000';
   const cameraSecondaryColor = '#dddddd';
   const dispatch = useDispatch();
@@ -32,17 +33,22 @@ function CameraCanvas() {
   };
 
   const selectPixel = ({ offsetX, offsetY }) => {
-    const coords = {
-      x: Math.ceil(offsetX / canvasPxPerImagePx),
-      y: Math.ceil(offsetY / canvasPxPerImagePx)
+    console.log([offsetX, offsetY]);
+    const imageCoords = {
+      x: Math.floor(offsetX / canvasPxPerImagePx),
+      y: Math.floor(offsetY / canvasPxPerImagePx)
     };
-    const pixelId = coords.y * imageResX + coords.x;
+    const leftCornerCoords = {
+      x: imageCoords.x * canvasPxPerImagePx,
+      y: imageCoords.y * canvasPxPerImagePx
+    };
+    const pixelId = imageCoords.y * imageResX + imageCoords.x;
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = cameraPrimaryColor;
     ctx.beginPath();
-    ctx.moveTo(100, 100);
+    ctx.moveTo(leftCornerCoords.x, leftCornerCoords.y);
     ctx.lineTo(300, 100);
     ctx.stroke();
     ctx.strokeStyle = cameraSecondaryColor;
