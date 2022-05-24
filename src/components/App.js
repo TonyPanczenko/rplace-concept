@@ -1,5 +1,6 @@
 import CameraCanvas from './CameraCanvas';
 import MainCanvas from './MainCanvas';
+import AddMenu from './AddMenu';
 import styles from '../styles/app.module.scss';
 
 function App() {
@@ -7,6 +8,7 @@ function App() {
     <div className={styles.app}>
       <MainCanvas />
       <CameraCanvas />
+      <AddMenu />
     </div>
   );
 }

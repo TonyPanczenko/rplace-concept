@@ -1,0 +1,18 @@
+.menu {
+  position: fixed;
+  bottom: 40px;
+  width: 50vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
+  border-radius: 5px;
+  border: 1px solid grey;
+}
+
+.menu > * {
+  flex: 0 0 100px;
+  margin: 20px;
+}
