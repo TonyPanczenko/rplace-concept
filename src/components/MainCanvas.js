@@ -3,16 +3,18 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 
 import { setPixels } from '../store/canvas';
+import { 
+  imageResX, 
+  imageResY, 
+  canvasPxPerImagePx,
+  canvasPxDensity,
+  cameraLineWidth
+} from '../utils/canvas-config.js';
 import styles from '../styles/main-canvas.module.scss';
 
 function MainCanvas() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
-  const imageResX = 100;
-  const imageResY = 100;
-  const imagePxSize = 10;
-  const canvasPxDensity = 2;
-  const canvasPxPerImagePx = imagePxSize * canvasPxDensity;
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -22,8 +24,8 @@ function MainCanvas() {
 
   const initCanvas = () => {
     const canvas = canvasRef.current;
-    canvas.width = imageResX * canvasPxPerImagePx;
-    canvas.height = imageResY * canvasPxPerImagePx;
+    canvas.width = imageResX * canvasPxPerImagePx + 4 * cameraLineWidth * canvasPxDensity;
+    canvas.height = imageResY * canvasPxPerImagePx + 4 * cameraLineWidth * canvasPxDensity;
     const ctx = canvas.getContext('2d');
     ctx.scale(canvasPxDensity, canvasPxDensity);
     ctxRef.current = ctx; 
@@ -35,8 +37,8 @@ function MainCanvas() {
     pixels.forEach(({ Coordinates, Color }) => {
       ctxRef.current.fillStyle = Color;
       ctxRef.current.fillRect(
-        Coordinates.x * canvasPxPerImagePx,
-        Coordinates.y * canvasPxPerImagePx,
+        Coordinates.x * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
+        Coordinates.y * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
         canvasPxPerImagePx,
         canvasPxPerImagePx
       );

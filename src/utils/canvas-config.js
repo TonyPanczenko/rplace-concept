@@ -1,0 +1,9 @@
+export const imageResX = 100;
+export const imageResY = 100;
+export const imagePxSize = 10;
+export const canvasPxDensity = 2;
+export const canvasPxPerImagePx = imagePxSize * canvasPxDensity;
+export const cameraLineWidth = 1;
+export const cameraSelectorSize = 3;
+export const cameraPrimaryColor = '#000000';
+export const cameraSecondaryColor = '#dddddd';
