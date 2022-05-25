@@ -1,18 +1,65 @@
 .menu {
   position: fixed;
   bottom: 40px;
-  width: 50vh;
+  left: 50%;
+  margin: 0 0 0 max(-40%, -500px);
+  width: min(80%, 1000px);
   display: flex;
+
   flex-direction: row;
   justify-content: center;
   align-content: center;
   align-items: center;
-
+  
   border-radius: 5px;
   border: 1px solid grey;
+  box-shadow: rgb(0, 0, 0) 0px 5px 13px -7px, 0px 8px 6px -3px rgba(0,0,0,0);
 }
 
-.menu > * {
-  flex: 0 0 100px;
+.picker {
   margin: 20px;
+  flex: 0 1 400px;
+}
+
+.btn {
+  margin: 20px;
+  flex: 0 0;
+}
+
+.btn {
+  font-size: 16px;
+  font-weight: 200;
+  letter-spacing: 1px;
+  padding: 5px 20px 5px;
+  outline: 0;
+  border: 1px solid black;
+  cursor: pointer;
+  position: relative;
+  background-color: rgba(0, 0, 0, 0);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn:after {
+  content: "";
+  background-color: lightpink;
+  width: 100%;
+  z-index: -1;
+  position: absolute;
+  height: 100%;
+  top: -7px;
+  left: -7px;
+  transition: 0.2s;
+}
+
+.btn:hover:after {
+  top: 0px;
+  left: 0px;
+}
+
+@media (min-width: 768px) {
+  .btn {
+    padding: 10px 15px 10px;
+  }
 }

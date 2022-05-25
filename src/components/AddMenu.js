@@ -9,11 +9,12 @@ function AddMenu() {
 
   return ( 
     <div className={styles.menu}>
-      <SliderPicker 
+      <SliderPicker
+        className={styles.picker} 
         color={color}
         onChangeComplete={setColor}
       />
-      <button>Place pixel</button>
+      <button className={styles.btn}>Place pixel</button>
     </div>
   );
 }
