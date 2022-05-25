@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = { 
   pixels: [],
-  selectedPixelId: null,
+  selectedPixelId: undefined,
   timeUserPlacedPixel: 0
 };
 
