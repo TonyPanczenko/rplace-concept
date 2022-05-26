@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 
 import { setPixels } from '../store/canvas';
@@ -16,11 +16,33 @@ function MainCanvas() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const dispatch = useDispatch();
+  const pixels = useSelector((state) => state.canvas.pixels);
 
   useEffect(() => {
     initCanvas();
-    getImage();
+    downloadImage();
   }, []);
+
+  useEffect(() => {
+    console.log(pixels);
+    if (!pixels) return;
+    redrawCanvas(pixels);
+  }, [pixels]);
+
+  const redrawCanvas = (pixels) => {
+    const canvas = canvasRef.current;
+    const ctx = ctxRef.current;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    pixels.forEach(({ coordinates, color }) => {
+      ctxRef.current.fillStyle = color;
+      ctxRef.current.fillRect(
+        coordinates.x * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
+        coordinates.y * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
+        canvasPxPerImagePx,
+        canvasPxPerImagePx
+      );
+    });
+  };
 
   const initCanvas = () => {
     const canvas = canvasRef.current;
@@ -31,19 +53,10 @@ function MainCanvas() {
     ctxRef.current = ctx; 
   };
 
-  const getImage = async () => {
+  const downloadImage = async () => {
     // This is my backend currently provisioned on AWS using CDK
-    const { data: { pixels } } = await axios.get(`${process.env.REACT_APP_API_URL}/get-image`);
-    pixels.forEach(({ Coordinates, Color }) => {
-      ctxRef.current.fillStyle = Color;
-      ctxRef.current.fillRect(
-        Coordinates.x * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
-        Coordinates.y * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
-        canvasPxPerImagePx,
-        canvasPxPerImagePx
-      );
-    });
-    dispatch(setPixels(pixels));
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/get-image`);
+    dispatch(setPixels(res.data.pixels));
   };
 
   return (
