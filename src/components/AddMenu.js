@@ -26,7 +26,7 @@ function AddMenu() {
           coordinates,
           color
         },
-        timestamp: 0
+        timestamp: 0,
       }));
     }
   };

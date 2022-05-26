@@ -24,7 +24,6 @@ function MainCanvas() {
   }, []);
 
   useEffect(() => {
-    console.log(pixels);
     if (!pixels) return;
     redrawCanvas(pixels);
   }, [pixels]);

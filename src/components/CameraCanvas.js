@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import debounce from 'lodash/debounce';
 
 import { setSelectedPixel } from '../store/canvas';
+import PixelTooltip from './PixelTooltip';
 import { 
   imageResX, 
   imageResY, 
@@ -18,11 +20,15 @@ function CameraCanvas() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const dispatch = useDispatch();
+  const pixels = useSelector((state) => state.canvas.pixels);
+  const [tooltipCoords, setTooltipCoords] = useState({ x: 0, y: 0 }); 
+  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [pixelHoveredOn, setPixelHoveredOn] = useState(null);
 
   const initCanvas = () => {
     const canvas = canvasRef.current;
-    canvas.width = imageResX * canvasPxPerImagePx;
-    canvas.height = imageResY * canvasPxPerImagePx;
+    canvas.width = imageResX * canvasPxPerImagePx + 4 * cameraLineWidth * canvasPxDensity;
+    canvas.height = imageResY * canvasPxPerImagePx + 4 * cameraLineWidth * canvasPxDensity;
     const ctx = canvas.getContext('2d');
     ctx.scale(canvasPxDensity, canvasPxDensity);
     ctx.lineWidth = cameraLineWidth * canvasPxDensity;
@@ -46,45 +52,73 @@ function CameraCanvas() {
     ctx.strokeRect(x, y, imagePxSize, imagePxSize);
   };
 
+  const findPixelCoordinates = (clientX, clientY) => {
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width / canvasPxDensity;
+    const scaleY = canvas.height / rect.height / canvasPxDensity;
+    return {
+      x: Math.floor((clientX - rect.left) * scaleX / canvasPxPerImagePx),
+      y: Math.floor((clientY - rect.top) * scaleY / canvasPxPerImagePx)
+    };
+  };
+
   const selectPixel = (e) => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const imageCoords = {
-      x: Math.floor(e.nativeEvent.offsetX * scaleX / canvasPxDensity / canvasPxPerImagePx),
-      y: Math.floor(e.nativeEvent.offsetY * scaleY / canvasPxDensity / canvasPxPerImagePx)
-    };
+    const pixelCoordinates = findPixelCoordinates(e.clientX, e.clientY);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawCameraSelector(
-      imageCoords.x * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity, 
-      imageCoords.y * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
+      pixelCoordinates.x * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity, 
+      pixelCoordinates.y * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
       canvasPxPerImagePx,
       cameraSelectorSize * canvasPxDensity,
       cameraPrimaryColor
     );
     drawCameraSelector(
-      imageCoords.x * canvasPxPerImagePx + cameraLineWidth * canvasPxDensity, 
-      imageCoords.y * canvasPxPerImagePx + cameraLineWidth * canvasPxDensity,
+      pixelCoordinates.x * canvasPxPerImagePx + cameraLineWidth * canvasPxDensity, 
+      pixelCoordinates.y * canvasPxPerImagePx + cameraLineWidth * canvasPxDensity,
       canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
       (cameraSelectorSize + 1) * canvasPxDensity,
       cameraSecondaryColor
     );
-    const pixelId = imageCoords.y * imageResX + imageCoords.x;
+    const pixelId = pixelCoordinates.y * imageResX + pixelCoordinates.x;
     dispatch(setSelectedPixel(pixelId));
   };
+
+  const handleMouseMove = ({ clientX, clientY }) => {
+    const { x, y } = findPixelCoordinates(clientX, clientY);
+    setPixelHoveredOn(pixels.find((px) => px.coordinates.x === x && px.coordinates.y === y));
+    if (pixelHoveredOn) { 
+      setTooltipCoords({ clientX, clientY });
+      setTooltipVisible(true);
+    }
+  };
+
+  const debouncedHandleMouseMove = useRef((e) => {
+    setTooltipVisible(false);
+    debounce(handleMouseMove(e), 500);
+  });
 
   useEffect(() => {
     initCanvas();
   }, []);
 
   return (
-    <canvas
-      className={styles.canvas}
-      onClick={selectPixel}
-      ref={canvasRef}
-    ></canvas>
+    <>
+      <canvas
+        className={styles.canvas}
+        onClick={selectPixel}
+        onMouseMove={debouncedHandleMouseMove.current}
+        ref={canvasRef}
+      ></canvas>
+      {tooltipVisible &&
+        <PixelTooltip 
+          pixel={pixelHoveredOn} 
+          style={{left: `${tooltipCoords.x}px`, top: `${tooltipCoords.y}px`}}
+        />
+      }
+    </>
   );
 }
 
