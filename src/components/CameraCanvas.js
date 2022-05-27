@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+// eslint-disable-next-line no-unused-vars
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+// eslint-disable-next-line no-unused-vars
 import debounce from 'lodash/debounce';
 
 import { setSelectedPixel } from '../store/canvas';
@@ -21,8 +23,11 @@ function CameraCanvas() {
   const ctxRef = useRef(null);
   const dispatch = useDispatch();
   const pixels = useSelector((state) => state.canvas.pixels);
-  const [tooltipCoords, setTooltipCoords] = useState({ x: 0, y: 0 }); 
+  // eslint-disable-next-line no-unused-vars
+  const [tooltipCoords, setTooltipCoords] = useState(0); 
+  // eslint-disable-next-line no-unused-vars
   const [tooltipVisible, setTooltipVisible] = useState(false);
+  // eslint-disable-next-line no-unused-vars
   const [pixelHoveredOn, setPixelHoveredOn] = useState(null);
 
   const initCanvas = () => {
@@ -88,17 +93,13 @@ function CameraCanvas() {
 
   const handleMouseMove = ({ clientX, clientY }) => {
     const { x, y } = findPixelCoordinates(clientX, clientY);
-    setPixelHoveredOn(pixels.find((px) => px.coordinates.x === x && px.coordinates.y === y));
-    if (pixelHoveredOn) { 
-      setTooltipCoords({ clientX, clientY });
-      setTooltipVisible(true);
-    }
+    const pixelHoveredOn = pixels.find((px) => px.coordinates.x === x && px.coordinates.y === y);
+    setPixelHoveredOn(pixelHoveredOn);
   };
 
-  const debouncedHandleMouseMove = useRef((e) => {
-    setTooltipVisible(false);
-    debounce(handleMouseMove(e), 500);
-  });
+  // const debouncedHandleMouseMove = useMemo(() => {
+  //   return debounce(handleMouseMove, 200);
+  // }, [pixels]);
 
   useEffect(() => {
     initCanvas();
@@ -109,13 +110,13 @@ function CameraCanvas() {
       <canvas
         className={styles.canvas}
         onClick={selectPixel}
-        onMouseMove={debouncedHandleMouseMove.current}
+        onMouseMove={handleMouseMove}
         ref={canvasRef}
       ></canvas>
-      {tooltipVisible &&
+      {true &&
         <PixelTooltip 
           pixel={pixelHoveredOn} 
-          style={{left: `${tooltipCoords.x}px`, top: `${tooltipCoords.y}px`}}
+          style={{left: `${tooltipCoords}px`, top: `${tooltipCoords}px`}}
         />
       }
     </>
