@@ -97,10 +97,6 @@ function CameraCanvas() {
     setPixelHoveredOn(pixelHoveredOn);
   };
 
-  // const debouncedHandleMouseMove = useMemo(() => {
-  //   return debounce(handleMouseMove, 200);
-  // }, [pixels]);
-
   useEffect(() => {
     initCanvas();
   }, []);
