@@ -55,7 +55,7 @@ function CameraCanvas() {
     ctx.strokeRect(x, y, imagePxSize, imagePxSize);
   };
 
-  const findPixelCoordinates = (clientX, clientY) => {
+  const findPixelCoords = (clientX, clientY) => {
     const canvas = canvasRef.current;
     const canvasCoords = windowCoordsToCanvasCoords({ x: clientX, y: clientY }, canvas);
     return canvasCoordsToImageCoords(canvasCoords);
@@ -67,15 +67,15 @@ function CameraCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const canvasCoords = imageCoordsToCanvasCoords(pixelCoordinates);
     drawCameraSelector(
-      imageCoordsToCanvasCoords(canvasCoords.x), 
-      imageCoordsToCanvasCoords(canvasCoords.y),
+      canvasCoords.x, 
+      canvasCoords.y,
       canvasPxPerImagePx,
       cameraSelectorSize * canvasPxDensity,
       cameraPrimaryColor
     );
     drawCameraSelector(
-      imageCoordsToCanvasCoords(canvasCoords.x) - cameraLineWidth * canvasPxDensity, 
-      imageCoordsToCanvasCoords(canvasCoords.y) - cameraLineWidth * canvasPxDensity,
+      canvasCoords.x - cameraLineWidth * canvasPxDensity, 
+      canvasCoords.y - cameraLineWidth * canvasPxDensity,
       canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
       (cameraSelectorSize + 1) * canvasPxDensity,
       cameraSecondaryColor
@@ -83,14 +83,14 @@ function CameraCanvas() {
   };
 
   const selectPixel = (e) => {
-    const pixelCoordinates = findPixelCoordinates(e.clientX, e.clientY);
+    const pixelCoordinates = findPixelCoords(e.clientX, e.clientY);
     drawNewCamera(pixelCoordinates);
     const pixelId = pixelCoordinates.y * imageResX + pixelCoordinates.x;
     dispatch(setSelectedPixel(pixelId));
   };
 
   const handleMouseMove = ({ clientX, clientY }) => {
-    const { x, y } = findPixelCoordinates(clientX, clientY);
+    const { x, y } = findPixelCoords(clientX, clientY);
     const pixelHoveredOn = pixels.find((px) => px.coordinates.x === x && px.coordinates.y === y);
     if (pixelHoveredOn) {
       setPixelHoveredOn(pixelHoveredOn);

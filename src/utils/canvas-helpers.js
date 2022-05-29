@@ -9,8 +9,8 @@ export const imageCoordsToCanvasCoords = ({ x, y }) => {
 
 export const canvasCoordsToImageCoords = ({ x, y }) => {
   return {
-    x: Math.floor(x / canvasPxPerImagePx),
-    y: Math.floor(y / canvasPxPerImagePx)
+    x: Math.floor((x - 2 * cameraLineWidth * canvasPxDensity) / canvasPxPerImagePx),
+    y: Math.floor((y - 2 * cameraLineWidth * canvasPxDensity) / canvasPxPerImagePx)
   };
 };
 
