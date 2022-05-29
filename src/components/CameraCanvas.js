@@ -1,8 +1,5 @@
-// eslint-disable-next-line no-unused-vars
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// eslint-disable-next-line no-unused-vars
-import debounce from 'lodash/debounce';
 
 import { setSelectedPixel } from '../store/canvas';
 import PixelTooltip from './PixelTooltip';
@@ -17,18 +14,19 @@ import {
   cameraSecondaryColor 
 } from '../utils/canvas-config.js';
 import styles from '../styles/camera-canvas.module.scss';
+import { imagePxCoordToCanvasCoord } from 'utils/canvas-helpers';
 
 function CameraCanvas() {
   const canvasRef = useRef(null);
   const ctxRef = useRef(null);
   const dispatch = useDispatch();
   const pixels = useSelector((state) => state.canvas.pixels);
-  // eslint-disable-next-line no-unused-vars
-  const [tooltipCoords, setTooltipCoords] = useState(0); 
-  // eslint-disable-next-line no-unused-vars
   const [tooltipVisible, setTooltipVisible] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [pixelHoveredOn, setPixelHoveredOn] = useState(null);
+  
+  useEffect(() => {
+    initCanvas();
+  }, []);
 
   const initCanvas = () => {
     const canvas = canvasRef.current;
@@ -68,25 +66,29 @@ function CameraCanvas() {
     };
   };
 
-  const selectPixel = (e) => {
+  const drawNewCamera = (pixelCoordinates) => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
-    const pixelCoordinates = findPixelCoordinates(e.clientX, e.clientY);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawCameraSelector(
-      pixelCoordinates.x * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity, 
-      pixelCoordinates.y * canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
+      imagePxCoordToCanvasCoord(pixelCoordinates.x), 
+      imagePxCoordToCanvasCoord(pixelCoordinates.y),
       canvasPxPerImagePx,
       cameraSelectorSize * canvasPxDensity,
       cameraPrimaryColor
     );
     drawCameraSelector(
-      pixelCoordinates.x * canvasPxPerImagePx + cameraLineWidth * canvasPxDensity, 
-      pixelCoordinates.y * canvasPxPerImagePx + cameraLineWidth * canvasPxDensity,
+      imagePxCoordToCanvasCoord(pixelCoordinates.x) - cameraLineWidth * canvasPxDensity, 
+      imagePxCoordToCanvasCoord(pixelCoordinates.y) - cameraLineWidth * canvasPxDensity,
       canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
       (cameraSelectorSize + 1) * canvasPxDensity,
       cameraSecondaryColor
     );
+  };
+
+  const selectPixel = (e) => {
+    const pixelCoordinates = findPixelCoordinates(e.clientX, e.clientY);
+    drawNewCamera(pixelCoordinates);
     const pixelId = pixelCoordinates.y * imageResX + pixelCoordinates.x;
     dispatch(setSelectedPixel(pixelId));
   };
@@ -94,12 +96,14 @@ function CameraCanvas() {
   const handleMouseMove = ({ clientX, clientY }) => {
     const { x, y } = findPixelCoordinates(clientX, clientY);
     const pixelHoveredOn = pixels.find((px) => px.coordinates.x === x && px.coordinates.y === y);
-    setPixelHoveredOn(pixelHoveredOn);
+    if (pixelHoveredOn) {
+      setPixelHoveredOn(pixelHoveredOn);
+      setTooltipVisible(true);
+    } else {
+      setPixelHoveredOn(null);
+      setTooltipVisible(false);
+    }
   };
-
-  useEffect(() => {
-    initCanvas();
-  }, []);
 
   return (
     <>
@@ -109,10 +113,10 @@ function CameraCanvas() {
         onMouseMove={handleMouseMove}
         ref={canvasRef}
       ></canvas>
-      {true &&
+      {tooltipVisible &&
         <PixelTooltip 
-          pixel={pixelHoveredOn} 
-          style={{left: `${tooltipCoords}px`, top: `${tooltipCoords}px`}}
+          pixel={pixelHoveredOn}
+          canvasRef={canvasRef}
         />
       }
     </>
