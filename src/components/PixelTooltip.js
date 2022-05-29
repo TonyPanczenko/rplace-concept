@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-import { imagePxCoordToCanvasCoord } from 'utils/canvas-helpers';
+import { canvasCoordsToWindowCoords, imageCoordsToCanvasCoords } from 'utils/canvas-helpers';
 import styles from '../styles/pixel-tooltip.module.scss';
 
 function PixelTooltip({ pixel, canvasRef }) {
@@ -9,11 +9,7 @@ function PixelTooltip({ pixel, canvasRef }) {
     userIp,
     timestamp
   } = pixel;
-  const canvasBoundingRect = canvasRef.current.getBoundingClientRect();
-  const tooltipCoords = {
-    x: imagePxCoordToCanvasCoord(coordinates.x) + canvasBoundingRect.left,
-    y: imagePxCoordToCanvasCoord(coordinates.y) + canvasBoundingRect.top
-  };
+  const tooltipCoords = canvasCoordsToWindowCoords(imageCoordsToCanvasCoords(coordinates), canvasRef.current);
 
   return (
     <div 

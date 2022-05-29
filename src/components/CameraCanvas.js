@@ -14,7 +14,7 @@ import {
   cameraSecondaryColor 
 } from '../utils/canvas-config.js';
 import styles from '../styles/camera-canvas.module.scss';
-import { imagePxCoordToCanvasCoord } from 'utils/canvas-helpers';
+import { canvasCoordsToImageCoords, imageCoordsToCanvasCoords, windowCoordsToCanvasCoords } from 'utils/canvas-helpers';
 
 function CameraCanvas() {
   const canvasRef = useRef(null);
@@ -57,29 +57,25 @@ function CameraCanvas() {
 
   const findPixelCoordinates = (clientX, clientY) => {
     const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width / canvasPxDensity;
-    const scaleY = canvas.height / rect.height / canvasPxDensity;
-    return {
-      x: Math.floor((clientX - rect.left) * scaleX / canvasPxPerImagePx),
-      y: Math.floor((clientY - rect.top) * scaleY / canvasPxPerImagePx)
-    };
+    const canvasCoords = windowCoordsToCanvasCoords({ x: clientX, y: clientY }, canvas);
+    return canvasCoordsToImageCoords(canvasCoords);
   };
 
   const drawNewCamera = (pixelCoordinates) => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const canvasCoords = imageCoordsToCanvasCoords(pixelCoordinates);
     drawCameraSelector(
-      imagePxCoordToCanvasCoord(pixelCoordinates.x), 
-      imagePxCoordToCanvasCoord(pixelCoordinates.y),
+      imageCoordsToCanvasCoords(canvasCoords.x), 
+      imageCoordsToCanvasCoords(canvasCoords.y),
       canvasPxPerImagePx,
       cameraSelectorSize * canvasPxDensity,
       cameraPrimaryColor
     );
     drawCameraSelector(
-      imagePxCoordToCanvasCoord(pixelCoordinates.x) - cameraLineWidth * canvasPxDensity, 
-      imagePxCoordToCanvasCoord(pixelCoordinates.y) - cameraLineWidth * canvasPxDensity,
+      imageCoordsToCanvasCoords(canvasCoords.x) - cameraLineWidth * canvasPxDensity, 
+      imageCoordsToCanvasCoords(canvasCoords.y) - cameraLineWidth * canvasPxDensity,
       canvasPxPerImagePx + 2 * cameraLineWidth * canvasPxDensity,
       (cameraSelectorSize + 1) * canvasPxDensity,
       cameraSecondaryColor
