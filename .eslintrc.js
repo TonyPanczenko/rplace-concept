@@ -37,7 +37,7 @@ module.exports = {
       'always'
     ]
   },
-  'ignorePatterns': ['dist/*'],
+  'ignorePatterns': ['dist/*', 'build/*'],
   'settings': {
     'react': {
       'createClass': 'createReactClass', // Regex for Component Factory to use,
