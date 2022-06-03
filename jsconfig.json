@@ -2,5 +2,5 @@
   "compilerOptions": {
     "baseUrl": "src"
   },
-  "exclude": ["dist"]
+  "exclude": ["dist", "build"]
 }
