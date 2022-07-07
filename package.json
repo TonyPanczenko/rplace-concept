@@ -1,5 +1,6 @@
 {
   "name": "rplace-concept",
+  "homepage": "/rplace-concept",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -18,6 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "./bin/deploy.sh",
     "test": "react-scripts test",
     "lint": "npx eslint **/*.js --fix",
     "eject": "react-scripts eject"
