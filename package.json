@@ -19,7 +19,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "deploy": "./bin/deploy.sh",
+    "deploy": "bash ./bin/deploy.sh",
     "test": "react-scripts test",
     "lint": "npx eslint **/*.js --fix",
     "eject": "react-scripts eject"
