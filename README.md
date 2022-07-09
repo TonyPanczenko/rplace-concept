@@ -1,6 +1,6 @@
 # rplace-concept - a crowd-sourced art project
 
-This app lets any visitor paint a single pixel of a persistent image visible to anyone. Users can see who and when painted each of the pixels. CDK proof of concept inspired by r/place. Available on [GH Pages]() and my portfolio page on [tonypanczenko.github.io](https://tonypanczenko.github.io/).
+This app lets any visitor paint a single pixel of a persistent image visible to anyone. Users can see who and when painted each of the pixels. CDK proof of concept inspired by r/place. Available on [GH Pages](https://tonypanczenko.github.io/rplace-concept/) and my portfolio page on [tonypanczenko.github.io](https://tonypanczenko.github.io/).
 
 [![GitHub repo active](https://img.shields.io/badge/repo-active-brightgreen)](https://tonypanczenko.github.io/rplace-concept/)
 [![GitHub last commit](https://img.shields.io/github/last-commit/tonypanczenko/rplace-concept)](https://github.com/TonyPanczenko/rplace-concept)
