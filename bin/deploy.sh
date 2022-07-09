@@ -5,6 +5,7 @@ set -o allexport
 source .env.local
 set +o allexport
 
+npm install
 npm run build
 
 cd build
