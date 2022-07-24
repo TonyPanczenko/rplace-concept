@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/rplace-concept/static/css/main.127505b5.css",
+    "main.js": "/rplace-concept/static/js/main.59712a89.js",
+    "index.html": "/rplace-concept/index.html",
+    "main.127505b5.css.map": "/rplace-concept/static/css/main.127505b5.css.map",
+    "main.59712a89.js.map": "/rplace-concept/static/js/main.59712a89.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.127505b5.css",
+    "static/js/main.59712a89.js"
+  ]
+}
